@@ -1,6 +1,6 @@
 "use client";
 
-import { useSessionDetailQuery } from "@/queries/exam";
+import { useSaveAnswerMutation, useSessionDetailQuery } from "@/queries/exam";
 import { useParams } from "next/navigation";
 
 export default function ExamSessionPage() {
@@ -11,6 +11,14 @@ export default function ExamSessionPage() {
     examId,
     sessionId,
   });
+
+  const saveAnswerMutation = useSaveAnswerMutation();
+  const handeSelectOption = (questionId: string, selectedOptionId: string) => {
+    saveAnswerMutation.mutate({
+      sessionId,
+      data: { questionId, selectedOptionId },
+    });
+  };
 
   if (isLoading) return <div className="p-6">Đang tải câu hỏi...</div>;
   if (isError)
@@ -34,7 +42,7 @@ export default function ExamSessionPage() {
                   name={`q-${q.questionId}`}
                   value={opt.id}
                   checked={q.selectedOptionId === opt.id}
-                  readOnly
+                  onChange={() => handeSelectOption(q.questionId, opt.id)}
                 />
                 <span dangerouslySetInnerHTML={{ __html: opt.contentHtml }} />
               </label>

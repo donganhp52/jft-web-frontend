@@ -1,5 +1,5 @@
 import examApiRequest from "@/apiRequest/exam";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   ExamType,
   SessionDetailType,
@@ -30,5 +30,23 @@ export const useSessionDetailQuery = ({
     queryKey: ["sessionDetail", examId, sessionId],
     queryFn: () => examApiRequest.getSessionDetail(examId, sessionId),
     enabled: Boolean(examId) && Boolean(sessionId),
+  });
+};
+
+export const useSaveAnswerMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      sessionId,
+      data,
+    }: {
+      sessionId: string;
+      data: { questionId: string; selectedOptionId: string };
+    }) => examApiRequest.saveSessionAnswer(sessionId, data),
+    onSuccess: () => {
+      // Refetch session detail để update UI với answer mới
+      queryClient.invalidateQueries({ queryKey: ["sessionDetail"] });
+    },
   });
 };

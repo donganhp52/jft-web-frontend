@@ -2,6 +2,7 @@ import { http } from "@/lib/http";
 import type {
   ExamSessionType,
   ExamType,
+  SaveAnswerResponseType,
   SessionDetailType,
 } from "@/schemaValidations/exam.schema";
 
@@ -18,6 +19,17 @@ const examApiRequest = {
     http
       .get(`${prefix}${examId}/sessions/${sessionId}`)
       .json<SessionDetailType>(),
+
+  saveSessionAnswer: (
+    sessionId: string,
+    data: {
+      questionId: string;
+      selectedOptionId: string;
+    },
+  ) =>
+    http
+      .put(`${prefix}sessions/${sessionId}/answers`, { json: data })
+      .json<SaveAnswerResponseType>(),
 };
 
 export default examApiRequest;

@@ -60,3 +60,17 @@ export const SessionDetailSchema = z.object({
 });
 
 export type SessionDetailType = z.TypeOf<typeof SessionDetailSchema>;
+
+export const SaveAnswerResponseSchema = z.object({
+  id: z.string(),
+  sessionId: z.string(),
+  questionId: z.string(),
+  selectedOptionId: z.string(),
+  answeredAt: z.string().datetime(),
+  isCorrect: z.boolean().nullable(),
+  questionSnapshotHtml: z.string().nullable(),
+  optionsSnapshotJson: z.string().nullable(),
+  correctOptionId: z.string().nullable(),
+});
+
+export type SaveAnswerResponseType = z.infer<typeof SaveAnswerResponseSchema>;
